@@ -32,11 +32,13 @@ export const authOptions: NextAuthOptions = {
             return { id: newUser.id, email: newUser.email, credits: newUser.credits };
           }
 
-          if (credentials?.password) {
-             const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
-             if (!isPasswordValid) {
-                return { id: user.id, email: user.email, credits: user.credits }; // allow mock pass anyway
-             }
+          if (!credentials?.password) {
+            throw new Error("Password is required for existing users");
+          }
+
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+          if (!isPasswordValid) {
+            throw new Error("Invalid password");
           }
 
           return { id: user.id, email: user.email, credits: user.credits };
@@ -58,7 +60,9 @@ export const authOptions: NextAuthOptions = {
         token.credits = (user as any).credits;
       }
 
-      if (token.id) {
+      // Performance optimization: rely on session triggers/updates rather than fetching on every API/Page hit.
+      // NextAuth provides an 'update' trigger to manually refresh token values.
+      if (trigger === "update" && token.id) {
         try {
           const dbUser = await prisma.user.findUnique({
             where: { id: token.id as string },
@@ -68,7 +72,6 @@ export const authOptions: NextAuthOptions = {
             token.credits = dbUser.credits;
           }
         } catch (e) {
-          // DB error, keep token.credits as is (e.g. 100)
         }
       }
 

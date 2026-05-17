@@ -39,47 +39,47 @@ export default function PricingPage() {
 
   return (
     <div>
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-slate-900">Kredi Al</h1>
-        <p className="text-slate-500 mt-2 max-w-2xl mx-auto">Sanal eşyalandırmaya ve video turları oluşturmaya devam etmek için kredi satın alın. 1 Kredi = 1 Yapay Zeka Eşyalandırma veya 1 Video Turu.</p>
+      <div className="text-center mb-16">
+        <h1 className="text-4xl font-semibold text-slate-900 tracking-tight">Kredi Yükle</h1>
+        <p className="text-slate-500 mt-4 max-w-2xl mx-auto font-light leading-relaxed">Sanal eşyalandırmaya ve video turları oluşturmaya devam etmek için kredi satın alın. <br/> <span className="font-medium text-slate-700">1 Kredi = 1 Yapay Zeka Eşyalandırma veya 1 Video Turu.</span></p>
       </div>
 
       <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
         {plans.map((plan) => (
-          <div key={plan.id} className="bg-white rounded-2xl border p-8 shadow-sm relative overflow-hidden">
+          <div key={plan.id} className={`bg-white rounded-[2rem] border p-10 shadow-sm relative overflow-hidden transition hover:shadow-lg ${plan.id === "pro" ? "border-slate-300 ring-4 ring-slate-50" : "border-slate-100"}`}>
             {plan.id === "pro" && (
-              <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+              <div className="absolute top-0 inset-x-0 bg-black text-white text-xs font-semibold py-1.5 text-center tracking-widest uppercase">
                 EN POPÜLER
               </div>
             )}
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">{plan.name}</h3>
-            <p className="text-slate-500 mb-6">{plan.description}</p>
-            <div className="mb-6">
-              <span className="text-4xl font-extrabold text-slate-900">${plan.price}</span>
-              <span className="text-slate-500"> / tek seferlik</span>
+            <h3 className={`text-2xl font-semibold text-slate-900 mb-2 tracking-tight ${plan.id === "pro" ? "mt-4" : ""}`}>{plan.name}</h3>
+            <p className="text-slate-500 mb-8 font-light">{plan.description}</p>
+            <div className="mb-8 flex items-baseline gap-1">
+              <span className="text-5xl font-semibold text-slate-900 tracking-tight">${plan.price}</span>
+              <span className="text-slate-500 font-medium">/ tek seferlik</span>
             </div>
 
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-center gap-2 text-slate-700">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                <span className="font-semibold">{plan.credits} Kredi</span> dahil
+            <ul className="space-y-4 mb-10">
+              <li className="flex items-center gap-3 text-slate-700">
+                <CheckCircle2 className="w-5 h-5 text-black" />
+                <span><span className="font-semibold">{plan.credits} Kredi</span> dahil</span>
               </li>
-              <li className="flex items-center gap-2 text-slate-700">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                Tüm temalara erişim
+              <li className="flex items-center gap-3 text-slate-700">
+                <CheckCircle2 className="w-5 h-5 text-black" />
+                <span>Tüm yapay zeka temalarına erişim</span>
               </li>
-              <li className="flex items-center gap-2 text-slate-700">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                Yüksek çözünürlüklü indirmeler
+              <li className="flex items-center gap-3 text-slate-700">
+                <CheckCircle2 className="w-5 h-5 text-black" />
+                <span>Yüksek çözünürlüklü indirmeler</span>
               </li>
             </ul>
 
             <button
               onClick={() => handlePurchase(plan.id)}
               disabled={loading !== null}
-              className={`w-full py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition ${
+              className={`w-full py-4 px-4 rounded-full font-medium flex items-center justify-center gap-2 transition shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
                 plan.id === "pro"
-                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  ? "bg-black text-white hover:bg-slate-800"
                   : "bg-slate-100 text-slate-900 hover:bg-slate-200"
               }`}
             >

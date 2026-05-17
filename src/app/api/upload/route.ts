@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { put } from "@vercel/blob";
 import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: Request) {
@@ -20,25 +19,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const uploadDir = join(process.cwd(), "public/uploads");
-
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (e) {
-    }
-
     const ext = file.name.split('.').pop() || 'png';
     const filename = `${uuidv4()}.${ext}`;
-    const filepath = join(uploadDir, filename);
 
-    await writeFile(filepath, buffer);
+    const blob = await put(filename, file, { access: 'public' });
 
-    const url = `/uploads/${filename}`;
-
-    return NextResponse.json({ url });
+    return NextResponse.json({ url: blob.url });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json({ error: "Failed to upload file" }, { status: 500 });

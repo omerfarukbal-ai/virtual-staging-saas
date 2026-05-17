@@ -47,43 +47,43 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Projelerim</h1>
-          <p className="text-slate-500 text-sm mt-1">Sanal eşyalandırma projelerinizi buradan yönetin.</p>
+          <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Projelerim</h1>
+          <p className="text-slate-500 text-sm mt-1 font-light">Sanal eşyalandırma projelerinizi buradan yönetin.</p>
         </div>
 
         <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
           <Dialog.Trigger asChild>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition flex items-center gap-2">
+            <button className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-slate-800 transition flex items-center gap-2 shadow-sm hover:shadow-md">
               <FolderPlus className="w-4 h-4" /> Yeni Proje
             </button>
           </Dialog.Trigger>
           <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
-            <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 w-full max-w-md shadow-2xl z-50">
-              <Dialog.Title className="text-xl font-bold mb-4">Yeni Proje Oluştur</Dialog.Title>
+            <Dialog.Overlay className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-50 transition-opacity" />
+            <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-xl rounded-[2rem] p-8 w-full max-w-md shadow-2xl z-50 border border-white focus:outline-none">
+              <Dialog.Title className="text-2xl font-semibold mb-6 tracking-tight text-slate-900">Yeni Proje Oluştur</Dialog.Title>
               <form onSubmit={handleCreateProject}>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Proje Adı</label>
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-slate-700 mb-2 ml-1">Proje Adı</label>
                   <input
                     type="text"
                     required
                     autoFocus
                     value={newProjectName}
                     onChange={(e) => setNewProjectName(e.target.value)}
-                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-black focus:border-black outline-none bg-white/50 transition"
                     placeholder="Örn. Atatürk Caddesi No:12"
                   />
                 </div>
-                <div className="flex justify-end gap-3 mt-6">
+                <div className="flex justify-end gap-3 mt-8">
                   <Dialog.Close asChild>
-                    <button type="button" className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">İptal</button>
+                    <button type="button" className="px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">İptal</button>
                   </Dialog.Close>
                   <button
                     type="submit"
                     disabled={creating}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                    className="bg-black text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 disabled:opacity-50 flex items-center gap-2 transition shadow-sm"
                   >
                     {creating && <Loader2 className="w-4 h-4 animate-spin" />}
                     Oluştur
@@ -96,31 +96,31 @@ export default function DashboardPage() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>
+        <div className="flex justify-center py-32"><Loader2 className="w-8 h-8 animate-spin text-slate-400" /></div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-xl border border-dashed border-slate-300">
+        <div className="text-center py-32 bg-white rounded-[2rem] border border-dashed border-slate-200 shadow-sm">
           <FolderPlus className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-slate-900 mb-1">Henüz proje yok</h3>
-          <p className="text-slate-500 mb-4">Odaları eşyalandırmak için ilk projenizi oluşturun.</p>
-          <button onClick={() => setIsModalOpen(true)} className="text-blue-600 font-medium hover:underline">Proje oluştur</button>
+          <h3 className="text-xl font-medium text-slate-900 mb-2 tracking-tight">Henüz proje yok</h3>
+          <p className="text-slate-500 mb-6 font-light">Odaları eşyalandırmak için ilk projenizi oluşturun.</p>
+          <button onClick={() => setIsModalOpen(true)} className="text-black font-medium hover:underline">Proje oluştur</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
             <Link key={project.id} href={`/dashboard/projects/${project.id}`}>
-              <div className="bg-white rounded-xl border p-6 hover:shadow-lg transition cursor-pointer group">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="bg-blue-50 p-3 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition">
+              <div className="bg-white rounded-[1.5rem] border border-slate-100 p-6 shadow-sm hover:shadow-md transition cursor-pointer group hover:-translate-y-1">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-slate-50 p-4 rounded-2xl text-slate-600 group-hover:bg-black group-hover:text-white transition shadow-inner">
                     <Folder className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg text-slate-900 line-clamp-1">{project.name}</h3>
-                    <p className="text-xs text-slate-500">{new Date(project.createdAt).toLocaleDateString()}</p>
+                    <h3 className="font-semibold text-lg text-slate-900 line-clamp-1 tracking-tight">{project.name}</h3>
+                    <p className="text-xs text-slate-400 font-medium">{new Date(project.createdAt).toLocaleDateString()}</p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
-                  <span className="text-sm text-slate-600 font-medium">{project._count.rooms} Oda</span>
-                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition" />
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-50">
+                  <span className="text-sm text-slate-500 font-medium">{project._count.rooms} Oda</span>
+                  <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-black transition transform group-hover:translate-x-1" />
                 </div>
               </div>
             </Link>

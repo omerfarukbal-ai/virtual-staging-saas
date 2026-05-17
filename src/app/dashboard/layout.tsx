@@ -22,20 +22,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <nav className="bg-white border-b sticky top-0 z-50">
+    <div className="min-h-screen bg-slate-50/50">
+      <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
               <Link href="/dashboard" className="flex-shrink-0 flex items-center gap-2">
-                <Sofa className="w-8 h-8 text-blue-600" />
-                <span className="font-bold text-xl text-slate-900 hidden sm:block">StageAI</span>
+                <div className="bg-black p-1.5 rounded-lg">
+                  <Sofa className="w-5 h-5 text-white" />
+                </div>
+                <span className="font-semibold text-lg text-slate-900 hidden sm:block tracking-tight">StageAI</span>
               </Link>
-              <div className="ml-6 flex items-center space-x-4">
+              <div className="ml-8 flex items-center space-x-1">
                 <Link
                   href="/dashboard"
-                  className={`px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2 ${
-                    pathname === "/dashboard" ? "bg-slate-100 text-slate-900" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  className={`px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 transition ${
+                    pathname === "/dashboard" ? "bg-slate-100 text-slate-900" : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
                   }`}
                 >
                   <LayoutDashboard className="w-4 h-4" /> Projelerim
@@ -43,20 +45,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 border border-blue-100">
-                <Coins className="w-4 h-4 text-blue-500" />
+              <div className="bg-slate-100 text-slate-800 px-4 py-1.5 rounded-full text-sm font-medium flex items-center gap-2 border border-slate-200/50">
+                <Coins className="w-4 h-4 text-amber-500" />
                 {session.user.credits} Kredi
               </div>
               <Link
                 href="/dashboard/pricing"
-                className="text-sm font-medium text-slate-700 hover:text-blue-600 flex items-center gap-1"
+                className="text-sm font-medium text-slate-600 hover:text-black flex items-center gap-1.5 transition"
               >
                 <CreditCard className="w-4 h-4" /> Kredi Al
               </Link>
-              <div className="h-6 w-px bg-slate-200 mx-2"></div>
+              <div className="h-5 w-px bg-slate-200 mx-2"></div>
               <button
                 onClick={() => signOut()}
-                className="text-sm font-medium text-slate-600 hover:text-red-600 flex items-center gap-1"
+                className="text-sm font-medium text-slate-500 hover:text-red-600 flex items-center gap-1.5 transition"
               >
                 <LogOut className="w-4 h-4" /> Çıkış Yap
               </button>
@@ -65,7 +67,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {children}
       </main>
     </div>

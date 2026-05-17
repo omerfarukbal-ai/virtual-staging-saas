@@ -47,57 +47,37 @@ export async function POST(req: Request) {
        room = { id: roomId, stagedImage: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1024" };
     }
 
-    try {
-      if (!process.env.REPLICATE_API_TOKEN) {
-        throw new Error("No Replicate API token");
-      }
-
-      const output = await replicate.run(
-        "stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438",
-        {
-          input: {
-            cond_aug: 0.02,
-            decoding_t: 7,
-            input_image: room.stagedImage,
-            video_length: "14_frames_with_svd",
-            sizing_strategy: "maintain_aspect_ratio",
-            motion_bucket_id: 127,
-            frames_per_second: 6
-          }
-        }
-      );
-
-      try {
-        await prisma.room.update({
-          where: { id: room.id },
-          data: {
-            videoUrl: output as unknown as string,
-          },
-        });
-      } catch (e) {}
-
-    } catch (error) {
-      console.log("Replicate SVD failed or missing token, using mock fallback...");
-
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      const mockVideoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
-
-      try {
-        await prisma.room.update({
-          where: { id: room.id },
-          data: {
-            videoUrl: mockVideoUrl,
-          },
-        });
-      } catch (e) {}
+    if (!process.env.REPLICATE_API_TOKEN) {
+      throw new Error("No Replicate API token");
     }
 
+    const output = await replicate.run(
+      "stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438",
+      {
+        input: {
+          cond_aug: 0.02,
+          decoding_t: 7,
+          input_image: room.stagedImage,
+          video_length: "14_frames_with_svd",
+          sizing_strategy: "maintain_aspect_ratio",
+          motion_bucket_id: 127,
+          frames_per_second: 6
+        }
+      }
+    );
+
     try {
+      await prisma.room.update({
+        where: { id: room.id },
+        data: {
+          videoUrl: output as unknown as string,
+        },
+      });
+
       const updatedRoom = await prisma.room.findUnique({ where: { id: roomId }});
       return NextResponse.json(updatedRoom);
     } catch(e) {
-      return NextResponse.json({ ...room, videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4" });
+      return NextResponse.json({ ...room, videoUrl: output as unknown as string });
     }
   } catch (error) {
     console.error("Video processing error:", error);
