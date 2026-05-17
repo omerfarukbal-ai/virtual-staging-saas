@@ -68,11 +68,10 @@ export default function SignIn() {
                 </div>
                 <input
                   type="email"
-                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border"
-                  placeholder="ornek@email.com"
+                  placeholder="ornek@email.com (İsteğe bağlı)"
                 />
               </div>
             </div>
@@ -85,11 +84,10 @@ export default function SignIn() {
                 </div>
                 <input
                   type="password"
-                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border"
-                  placeholder="••••••••"
+                  placeholder="•••••••• (İsteğe bağlı)"
                 />
               </div>
             </div>
