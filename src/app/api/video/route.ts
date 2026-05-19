@@ -24,10 +24,17 @@ export async function POST(req: Request) {
 
     let room;
     try {
-      room = await prisma.room.findUnique({ where: { id: roomId } });
+      room = await prisma.room.findUnique({
+        where: { id: roomId },
+        include: { project: true }
+      });
 
       if (!room || !room.stagedImage) {
         return NextResponse.json({ error: "Room not found or not staged yet" }, { status: 404 });
+      }
+
+      if (room.project.userId !== session.user.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
       }
 
       const user = await prisma.user.findUnique({
@@ -51,33 +58,33 @@ export async function POST(req: Request) {
       throw new Error("No Replicate API token");
     }
 
-    const output = await replicate.run(
-      "stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438",
-      {
-        input: {
-          cond_aug: 0.02,
-          decoding_t: 7,
-          input_image: room.stagedImage,
-          video_length: "14_frames_with_svd",
-          sizing_strategy: "maintain_aspect_ratio",
-          motion_bucket_id: 127,
-          frames_per_second: 6
-        }
+    const prediction = await replicate.predictions.create({
+      version: "3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438",
+      input: {
+        cond_aug: 0.02,
+        decoding_t: 7,
+        input_image: room.stagedImage,
+        video_length: "14_frames_with_svd",
+        sizing_strategy: "maintain_aspect_ratio",
+        motion_bucket_id: 127,
+        frames_per_second: 6
       }
-    );
+    });
 
     try {
       await prisma.room.update({
         where: { id: room.id },
         data: {
-          videoUrl: output as unknown as string,
+          predictionId: prediction.id, // Re-using the same field for SVD tracking
+          status: "PROCESSING",
+          videoUrl: "PROCESSING" // Temporary flag to track SVD processing
         },
       });
 
       const updatedRoom = await prisma.room.findUnique({ where: { id: roomId }});
       return NextResponse.json(updatedRoom);
     } catch(e) {
-      return NextResponse.json({ ...room, videoUrl: output as unknown as string });
+      return NextResponse.json({ ...room, videoUrl: "PROCESSING", predictionId: prediction.id });
     }
   } catch (error) {
     console.error("Video processing error:", error);
