@@ -72,15 +72,15 @@ export async function POST(req: Request) {
     }
 
     const output = await replicate.run(
-      "adirik/interior-design:76604baddc85b1b4616e1c6475ce08224af9ed99b5240a869ea04b4df2ed14d1",
+      "rocketdigitalai/interior-design-sdxl:a3c091059a25590ce2d5ea13651fab63f447f21760e50c358d4b850e844f59ee",
       {
         input: {
           image: originalImage, // Directly passing Base64 Data URI from frontend
           prompt: prompt,
-          guidance_scale: 15,
-          negative_prompt: "lowres, watermark, banner, logo, watermark, contactinfo, text, deformed, blurry, blur, out of focus, out of frame, surreal, extra, ugly, upholstered walls, fabric walls, plush walls, mirror, mirrored, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, mutated, simple, empty, plain, poorly drawn, poorly lit",
-          prompt_strength: 0.8,
-          num_inference_steps: 50
+          negative_prompt: "lowres, watermark, banner, logo, watermark, contactinfo, text, deformed, blurry, blur, out of focus, out of frame, surreal, extra, ugly, poorly drawn, poorly lit, bad anatomy",
+          num_inference_steps: 50,
+          promax_strength: 0.8,
+          depth_strength: 0.8
         }
       }
     );
