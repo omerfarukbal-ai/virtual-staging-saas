@@ -72,15 +72,15 @@ export async function POST(req: Request) {
     }
 
     const output = await replicate.run(
-      "jagilley/controlnet-hough:854e87270c1a02422db7db98f121a99a80577da743bd22b1c411516e87f897b2",
+      "adirik/interior-design:76604baddc85b1b4616e1c6475ce08224af9ed99b5240a869ea04b4df2ed14d1",
       {
         input: {
           image: originalImage, // Directly passing Base64 Data URI from frontend
           prompt: prompt,
-          num_samples: "1",
-          image_resolution: "512",
-          a_prompt: "best quality, extremely detailed, photorealistic interior design",
-          n_prompt: "longbody, lowres, bad anatomy, bad hands, missing fingers, blurry, watermark",
+          guidance_scale: 15,
+          negative_prompt: "lowres, watermark, banner, logo, watermark, contactinfo, text, deformed, blurry, blur, out of focus, out of frame, surreal, extra, ugly, upholstered walls, fabric walls, plush walls, mirror, mirrored, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, mutated, simple, empty, plain, poorly drawn, poorly lit",
+          prompt_strength: 0.8,
+          num_inference_steps: 50
         }
       }
     );
