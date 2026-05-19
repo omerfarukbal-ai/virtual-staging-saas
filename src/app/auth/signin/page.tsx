@@ -3,7 +3,9 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sofa, Mail, Lock, AlertCircle } from "lucide-react";
+import Link from "next/link";
+import { Sofa, Mail, Lock, AlertCircle, ArrowLeft } from "lucide-react";
+import { MotionDiv } from "@/components/Motion";
 
 export default function SignIn() {
   const router = useRouter();
@@ -38,77 +40,84 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-slate-200 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+    <div className="min-h-screen bg-black text-white flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_bottom,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black pointer-events-none -z-10"></div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="flex justify-center">
-          <div className="bg-black p-3 rounded-2xl shadow-xl shadow-black/10">
-            <Sofa className="w-8 h-8 text-white" />
+      <MotionDiv initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="absolute top-8 left-8">
+        <Link href="/" className="flex items-center gap-2 text-slate-400 hover:text-white transition">
+          <ArrowLeft className="w-5 h-5" /> Ana Sayfaya Dön
+        </Link>
+      </MotionDiv>
+
+      <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+        <div className="flex justify-center mb-8">
+          <div className="bg-white/10 p-4 rounded-3xl shadow-[0_0_30px_rgba(255,255,255,0.1)] border border-white/10">
+            <Sofa className="w-10 h-10 text-white" />
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-semibold text-slate-900 tracking-tight">
-          Hoş Geldiniz
+        <h2 className="text-center text-4xl font-bold tracking-tight text-white mb-3">
+          Sisteme Giriş
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-500 font-light">
-          Hesabınız yoksa otomatik oluşturulacak ve 10 kredi verilecektir.
+        <p className="text-center text-sm text-slate-400 font-light">
+          Hesabınız yoksa otomatik oluşturulacak ve <span className="text-white font-medium">10 kredi</span> verilecektir.
         </p>
-      </div>
+      </MotionDiv>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="bg-white/80 backdrop-blur-xl py-8 px-4 shadow-2xl shadow-slate-200/50 sm:rounded-[2rem] sm:px-10 border border-slate-100">
+      <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="mt-10 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+        <div className="bg-white/5 backdrop-blur-3xl py-10 px-6 shadow-2xl sm:rounded-[2.5rem] sm:px-12 border border-white/10 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50/50 text-red-500 p-3 rounded-xl flex items-center gap-2 text-sm border border-red-100">
-                <AlertCircle className="w-4 h-4" /> {error}
+              <div className="bg-red-500/10 text-red-400 p-4 rounded-2xl flex items-center gap-3 text-sm border border-red-500/20">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" /> <span className="font-medium">{error}</span>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1 ml-1">E-posta</label>
-              <div className="relative rounded-xl shadow-sm">
+              <label className="block text-sm font-medium text-slate-300 mb-2 ml-1">E-posta Adresi</label>
+              <div className="relative rounded-2xl shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-slate-400" />
+                  <Mail className="h-5 w-5 text-slate-500" />
                 </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="focus:ring-2 focus:ring-black focus:border-black block w-full pl-11 sm:text-sm border-slate-200 rounded-xl py-3 border outline-none transition bg-white/50"
-                  placeholder="ornek@email.com (İsteğe bağlı)"
+                  className="focus:ring-2 focus:ring-white focus:border-white block w-full pl-12 sm:text-sm border-white/10 rounded-2xl py-3.5 bg-black/50 text-white placeholder-slate-600 outline-none transition"
+                  placeholder="ornek@sirket.com (İsteğe bağlı)"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1 ml-1">Şifre</label>
-              <div className="relative rounded-xl shadow-sm">
+              <label className="block text-sm font-medium text-slate-300 mb-2 ml-1">Şifre</label>
+              <div className="relative rounded-2xl shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
+                  <Lock className="h-5 w-5 text-slate-500" />
                 </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="focus:ring-2 focus:ring-black focus:border-black block w-full pl-11 sm:text-sm border-slate-200 rounded-xl py-3 border outline-none transition bg-white/50"
+                  className="focus:ring-2 focus:ring-white focus:border-white block w-full pl-12 sm:text-sm border-white/10 rounded-2xl py-3.5 bg-black/50 text-white placeholder-slate-600 outline-none transition"
                   placeholder="•••••••• (İsteğe bağlı)"
                 />
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-medium text-white bg-black hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 transition"
+                className="w-full flex justify-center py-4 px-4 rounded-2xl shadow-lg shadow-white/5 text-base font-semibold text-black bg-white hover:bg-slate-200 hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white disabled:opacity-50 disabled:hover:scale-100 transition-all duration-200"
               >
-                {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
+                {loading ? "Giriş yapılıyor..." : "Hemen Giriş Yap"}
               </button>
             </div>
           </form>
         </div>
-      </div>
+      </MotionDiv>
     </div>
   );
 }

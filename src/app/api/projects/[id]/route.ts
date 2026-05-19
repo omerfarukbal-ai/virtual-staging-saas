@@ -14,7 +14,7 @@ export async function GET(
   }
 
   try {
-    const project = await prisma.project.findUnique({
+    const project = await prisma.project.findFirst({
       where: {
         id: params.id,
         userId: session.user.id,

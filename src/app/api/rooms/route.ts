@@ -10,6 +10,8 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN || "mock_token",
 });
 
+export const maxDuration = 60; // 1 minute timeout for Vercel
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
 
@@ -32,6 +34,15 @@ export async function POST(req: Request) {
 
       if (!user || user.credits < 1) {
         return NextResponse.json({ error: "Insufficient credits" }, { status: 402 });
+      }
+
+      // Verify the user owns the project before creating a room
+      const project = await prisma.project.findFirst({
+        where: { id: projectId, userId: session.user.id }
+      });
+
+      if (!project) {
+        return NextResponse.json({ error: "Proje bulunamadı veya yetkiniz yok" }, { status: 403 });
       }
 
       room = await prisma.room.create({
@@ -97,6 +108,6 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("Room processing error:", error);
-    return NextResponse.json({ error: "Failed to process room" }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Oda eşyalandırılamadı" }, { status: 500 });
   }
 }
