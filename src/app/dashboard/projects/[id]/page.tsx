@@ -50,23 +50,24 @@ export default function ProjectDetail() {
     const selected = e.target.files?.[0];
     if (selected) {
       setFile(selected);
-      setPreview(URL.createObjectURL(selected));
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string); // base64 string
+      };
+      reader.readAsDataURL(selected);
     }
   };
 
   const handleUploadAndStage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file || !roomName) return;
+    if (!file || !roomName || !preview) return;
 
     setUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
-      const { url: originalImage } = await uploadRes.json();
-
-      if (!originalImage) throw new Error("Upload failed");
+      // preview state holds the base64 URL of the image: data:image/png;base64,...
+      const originalImage = preview;
 
       const stageRes = await fetch("/api/rooms", {
         method: "POST",
@@ -82,7 +83,7 @@ export default function ProjectDetail() {
 
       if (!stageRes.ok) {
         const err = await stageRes.json();
-        alert(err.error || "Failed to start staging");
+        throw new Error(err.error || "Eşyalandırma başlatılamadı");
       }
 
       setFile(null);
@@ -91,9 +92,9 @@ export default function ProjectDetail() {
       setCustomPrompt("");
       await update();
       fetchProject();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert("Bir hata oluştu");
+      alert(error.message || "Bir hata oluştu");
     } finally {
       setUploading(false);
     }

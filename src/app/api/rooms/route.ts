@@ -67,19 +67,15 @@ export async function POST(req: Request) {
 
     const prompt = customPrompt || `A beautiful ${theme || 'modern'} style living room interior, highly detailed, photorealistic`;
 
-    // Mock fallbacks removed since we have a real token and user wants to use it.
     if (!process.env.REPLICATE_API_TOKEN) {
-      throw new Error("No Replicate API token");
+      throw new Error("Replicate API anahtarı eksik.");
     }
-
-    // originalImage is now a remote public URL (Vercel Blob), no need for base64 conversion.
-    const imageInput = originalImage;
 
     const output = await replicate.run(
       "jagilley/controlnet-hough:854e87270c1a02422db7db98f121a99a80577da743bd22b1c411516e87f897b2",
       {
         input: {
-          image: imageInput,
+          image: originalImage, // Directly passing Base64 Data URI from frontend
           prompt: prompt,
           num_samples: "1",
           image_resolution: "512",
