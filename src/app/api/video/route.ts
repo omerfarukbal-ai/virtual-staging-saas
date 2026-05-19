@@ -8,8 +8,6 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN || "mock_token",
 });
 
-export const maxDuration = 60; // 1 minute timeout for Vercel
-
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
 

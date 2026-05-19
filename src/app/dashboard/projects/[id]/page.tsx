@@ -82,8 +82,19 @@ export default function ProjectDetail() {
       });
 
       if (!stageRes.ok) {
-        const err = await stageRes.json();
-        throw new Error(err.error || "Eşyalandırma başlatılamadı");
+        const errText = await stageRes.text();
+        let errorMessage = "Eşyalandırma başarısız oldu (Sunucu Hatası).";
+
+        try {
+          const errJson = JSON.parse(errText);
+          errorMessage = errJson.error || errorMessage;
+        } catch (e) {
+           // If it's an HTML response (like Vercel 504 Timeout)
+           if (stageRes.status === 504) {
+             errorMessage = "Vercel ücretsiz planı zaman aşımı (10 saniye) sınırına takıldı. Lütfen fotoğrafı küçültüp tekrar deneyin.";
+           }
+        }
+        throw new Error(errorMessage);
       }
 
       setFile(null);
