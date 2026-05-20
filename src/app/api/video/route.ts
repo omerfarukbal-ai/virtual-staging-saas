@@ -50,8 +50,7 @@ export async function POST(req: Request) {
         data: { credits: { decrement: 1 } },
       });
     } catch (e) {
-       // mock fallback
-       room = { id: roomId, stagedImage: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1024" };
+       throw new Error("Oda bilgileri veritabanından çekilemedi. Bağlantınızı kontrol edin.");
     }
 
     if (!process.env.REPLICATE_API_TOKEN) {
@@ -84,7 +83,7 @@ export async function POST(req: Request) {
       const updatedRoom = await prisma.room.findUnique({ where: { id: roomId }});
       return NextResponse.json(updatedRoom);
     } catch(e) {
-      return NextResponse.json({ ...room, videoUrl: "PROCESSING", predictionId: prediction.id });
+      throw new Error("Video üretim emri veritabanına kaydedilemedi.");
     }
   } catch (error) {
     console.error("Video processing error:", error);

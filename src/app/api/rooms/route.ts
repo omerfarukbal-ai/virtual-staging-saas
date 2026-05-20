@@ -59,8 +59,7 @@ export async function POST(req: Request) {
         data: { credits: { decrement: 1 } },
       });
     } catch (dbError) {
-       console.log("DB fallback in rooms create");
-       room = { id: `mock-room-${Date.now()}`, name, originalImage, theme, status: "PROCESSING", projectId };
+       throw new Error("Veritabanına bağlanılamadı. DATABASE_URL ayarlarınızı kontrol edin.");
     }
 
     const prompt = customPrompt || `A beautiful ${theme || 'modern'} style living room interior, highly detailed, photorealistic`;
@@ -93,7 +92,7 @@ export async function POST(req: Request) {
       const updatedRoom = await prisma.room.findUnique({ where: { id: room.id }});
       return NextResponse.json(updatedRoom);
     } catch (e) {
-      return NextResponse.json({ ...room, predictionId: prediction.id, status: "PROCESSING" });
+      throw new Error("Tahmin (Prediction) veritabanına kaydedilemedi.");
     }
 
   } catch (error) {

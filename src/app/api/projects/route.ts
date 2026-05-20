@@ -23,11 +23,7 @@ export async function GET() {
 
     return NextResponse.json(projects);
   } catch (error) {
-    // Mock fallback
-    return NextResponse.json([
-      { id: "mock-project-1", name: "Örnek Proje 1", createdAt: new Date().toISOString(), _count: { rooms: 2 } },
-      { id: "mock-project-2", name: "Örnek Proje 2", createdAt: new Date().toISOString(), _count: { rooms: 0 } },
-    ]);
+    return NextResponse.json({ error: "Veritabanına bağlanılamadı. Lütfen Vercel üzerinden DATABASE_URL değişkenini ayarlayın." }, { status: 500 });
   }
 }
 
@@ -57,7 +53,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(project);
   } catch (error) {
-    // Mock fallback
-    return NextResponse.json({ id: "mock-project-new", name: body.name || "Yeni Proje", description: body.description, userId: session.user.id, createdAt: new Date().toISOString() });
+    return NextResponse.json({ error: "Proje oluşturulamadı. Lütfen veritabanı bağlantılarınızı (DATABASE_URL) kontrol edin." }, { status: 500 });
   }
 }

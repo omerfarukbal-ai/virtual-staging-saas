@@ -102,21 +102,6 @@ export async function GET(
 
     return NextResponse.json(project);
   } catch (error) {
-    // Mock fallback
-    return NextResponse.json({
-      id: params.id,
-      name: "Örnek Proje (Demo)",
-      rooms: [
-        {
-          id: "mock-room-1",
-          name: "Salon",
-          originalImage: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1024",
-          stagedImage: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1024",
-          theme: "Modern",
-          status: "COMPLETED",
-          videoUrl: null
-        }
-      ]
-    });
+    return NextResponse.json({ error: "Proje bilgileri alınamadı. Veritabanı bağlantısı yok." }, { status: 500 });
   }
 }
